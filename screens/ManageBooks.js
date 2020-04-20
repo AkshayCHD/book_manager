@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Button, FlatList, RefreshControl } from 'react-native';
-import AddBookModal from '../Components/AddBookModal'
 import BooksCard from '../Components/BooksCard'
+import { PRIMARY_COLOR, SECONDARY_COLOR } from '../styles/globalStyles' 
 
-export default function ManageBooks() {
+export default function ManageBooks({ navigation }) {
   const [bookItems, setBookItems] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(async () => {
@@ -16,16 +15,17 @@ export default function ManageBooks() {
 
   useEffect(() => {
     loadData();
-  }, [modalOpen])
+  }, [])
 
   const loadData = () => new Promise((resolve, reject) => {
     fetch('https://h2haom2lf3.execute-api.us-east-2.amazonaws.com/dev/getAllBooks')
     .then(response => {
-        console.log(JSON.stringify(response))
         return response.json()
     })
     .then(responseJson => {
-      console.log(responseJson.Items)
+      responseJson.Items.sort(function(item1, item2) {
+        return item1.book_id - item2.book_id;
+      })
       setBookItems(responseJson.Items)
       
       resolve(true);
@@ -35,10 +35,12 @@ export default function ManageBooks() {
       reject(true);
     });
   })
+  const moveToAddBooks = () => {
+    navigation.navigate('AddBooks');
+  }
 
   return (
     <View style={styles.container}>
-
       <FlatList
         data={bookItems}
         style={styles.list}
@@ -48,10 +50,10 @@ export default function ManageBooks() {
         renderItem={({ item }) => <BooksCard id={item.book_id} name={item.name} author={item.author} issued_by={item.issued_by} issued={item.issued}/>}
         keyExtractor={item => item.book_id.toString()}
       />
-        <TouchableOpacity onPress={() => setModalOpen(true)} style={styles.fab}>
+        <TouchableOpacity onPress={() => moveToAddBooks()} style={styles.fab}>
           <Text style={styles.fabIcon}>+</Text>
         </TouchableOpacity>
-        <AddBookModal modalOpen={modalOpen} setModalOpen={setModalOpen}/>
+        {/* <AddBookModal navigation={navigation} modalOpen={modalOpen} setModalOpen={setModalOpen}/> */}
     </View>
   );
 }
@@ -63,10 +65,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    titleText: {
-      fontSize: 20,
-      fontWeight: 'bold',
-    },
     fab: {
       position: 'absolute',
       width: 56,
@@ -75,7 +73,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       right: 20,
       bottom: 20,
-      backgroundColor: '#03A9F4',
+      backgroundColor: SECONDARY_COLOR,
       borderRadius: 30,
       elevation: 8
     },
@@ -84,7 +82,7 @@ const styles = StyleSheet.create({
       color: 'white'
     },
     list: {
-      marginTop: 10
+      marginTop: 10,
     }
 })
   

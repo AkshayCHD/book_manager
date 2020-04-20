@@ -1,6 +1,7 @@
 import React from 'react'
 import { MaterialIcons } from '@expo/vector-icons'
 import { StyleSheet, View, Text } from 'react-native'
+import { PRIMARY_COLOR } from '../styles/globalStyles' 
 
 export default function Header({ navigation, title }) {
     const openMenu = () => {
@@ -18,14 +19,13 @@ export default function Header({ navigation, title }) {
 
 const styles = StyleSheet.create({
     header: {
-        width: "100%",
-        height: "100%",
+        flex: 1,
         color: 'red',
         flexDirection: 'row',
     },
     headerText: {
-        fontWeight: 'bold',
+        marginLeft: 20,
+        fontFamily: 'lacquer-regular',
         fontSize: 20,
-        letterSpacing: 1
     }
 })

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Button, FlatList, RefreshControl } from 'react-native';
 import AddEmployeeModal from '../Components/AddEmployeeModal'
-import EmployeesCard from '../Components/EmployeesCard';
+import EmployeesCard from '../Components/EmployeesCard'
+import { PRIMARY_COLOR, SECONDARY_COLOR } from '../styles/globalStyles'
 
 export default function ManageEmployees() {
   const [employeeItems, setEmployeeItems] = useState([]);
@@ -21,11 +22,9 @@ export default function ManageEmployees() {
   const loadData = () => new Promise((resolve, reject) => {
     fetch('https://h2haom2lf3.execute-api.us-east-2.amazonaws.com/dev/getAllEmployees')
     .then(response => {
-        console.log(JSON.stringify(response))
         return response.json()
     })
     .then(responseJson => {
-      console.log(responseJson.Items)
       setEmployeeItems(responseJson.Items)
       resolve(true);
     })
@@ -74,7 +73,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       right: 20,
       bottom: 20,
-      backgroundColor: '#03A9F4',
+      backgroundColor: SECONDARY_COLOR,
       borderRadius: 30,
       elevation: 8
     },

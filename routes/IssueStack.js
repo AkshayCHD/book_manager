@@ -3,6 +3,7 @@ import React from 'react'
 import Issue from '../screens/Issue'
 import QrScanner from '../screens/QrScanner'
 import Header from '../shared/Header'
+import { PRIMARY_COLOR } from '../styles/globalStyles' 
 
 const screens = {
     Issue: {
@@ -24,7 +25,8 @@ const screens = {
 const IssueStack = createStackNavigator(screens, {
     defaultNavigationOptions: {
         headerStyle: {
-            height: 90
+            height: 90,
+            backgroundColor: PRIMARY_COLOR
         }
     }
 });

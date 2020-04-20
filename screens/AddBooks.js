@@ -5,65 +5,72 @@ import { Formik } from 'formik';
 import { TextInput } from 'react-native-gesture-handler';
 import { PRIMARY_COLOR, SECONDARY_COLOR } from '../styles/globalStyles' 
 
-export default function AddEmployeesModal(props) {
-    const addEmployee = (values) => {
-        fetch('https://h2haom2lf3.execute-api.us-east-2.amazonaws.com/dev/addemployees', {
+export default function AddBooks(props) {
+    [bookId, setBookId] = useState("");
+    const addBook = (values) => {
+        if(!bookId) {
+            return ToastAndroid.show("Please scan a book ID", ToastAndroid.LONG);
+        }
+        fetch('https://h2haom2lf3.execute-api.us-east-2.amazonaws.com/dev/addbooks', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "email": values.email,
-                "name": values.name
+                "book_id": bookId,
+                "book_name": values.name,
+                "book_author": values.author,
+                "issued": false,
             }),
         })
         .then(response => {
             return response.json()
         })
         .then(responseJson => {
-            props.setModalOpen(false);
             ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.LONG);
         })
         .catch(error => {
-            props.setModalOpen(false)
             ToastAndroid.show(JSON.stringify(error), ToastAndroid.LONG);
         });
     }
+    const getBackData = (value) => {
+        setBookId(value.data)
+    }
+    const scanBookId = () => {
+        props.navigation.push('QrScanner', {goBackData: getBackData});
+    }
     return (
-        <Modal visible={props.modalOpen} animationType='slide'>
             <View style={styles.modalContent}>  
-                <MaterialIcons
-                name='close'
-                size={24}
-                onPress={() => props.setModalOpen(false)} />
+                <Text style={styles.text}>The Book Id is: {bookId}</Text>
+                <Button title="Scan Book Id" color={SECONDARY_COLOR} onPress={() => scanBookId()} />
                 <Formik
-                    initialValues={{ email: '', name: '' }}
+                    initialValues={{ name: '', author: '' }}
                     onSubmit={(values, actions) => {
                         actions.resetForm();
-                        addEmployee(values)
+                        addBook(values)
                     }}
                 >
                     {(formikProps) => (
                         <View>
                             <TextInput
                                 style={styles.input}
-                                placeholder="Employee Email"
-                                onChangeText={formikProps.handleChange('email')}
-                                value={formikProps.values.id}
-                            />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Employee Name"
+                                placeholder="Book Name"
                                 onChangeText={formikProps.handleChange('name')}
                                 value={formikProps.values.name}
                             />
-                            <Button title="Submit" color={SECONDARY_COLOR} onPress={formikProps.handleSubmit} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Book author"
+                                onChangeText={formikProps.handleChange('author')}
+                                value={formikProps.values.author}
+                            />
+                            <Button title="SUbmit" color={SECONDARY_COLOR} onPress={formikProps.handleSubmit} />
                         </View>
                     )}
                 </Formik>
             </View>
-        </Modal>   
+        
   );
 }
 
@@ -87,6 +94,9 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 18,
         borderRadius: 6
+    },
+    text: {
+        fontSize: 25,
     }
 })
   

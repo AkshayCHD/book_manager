@@ -5,6 +5,7 @@ import { Formik } from 'formik';
 import { TextInput } from 'react-native-gesture-handler';
 
 export default function AddBooksModal(props) {
+    [bookId, setBookId] = useState("");
     const addBook = (values) => {
         fetch('https://h2haom2lf3.execute-api.us-east-2.amazonaws.com/dev/addbooks', {
             method: 'POST',
@@ -31,6 +32,13 @@ export default function AddBooksModal(props) {
             ToastAndroid.show(JSON.stringify(error), ToastAndroid.LONG);
         });
     }
+    const getBackData = (value) => {
+        setBookId(value.data)
+    }
+    const scanBookId = () => {
+        console.log("sdfsdfsdfsdf")
+        props.navigation.navigate('QrScanner', {goBackData: getBackData});
+    }
     return (
         <Modal visible={props.modalOpen} animationType='slide'>
             <View style={styles.modalContent}>  
@@ -38,8 +46,15 @@ export default function AddBooksModal(props) {
                 name='close'
                 size={24}
                 onPress={() => props.setModalOpen(false)} />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Book Id"
+                    keyboardType='numeric'
+                    value="sfdsd"
+                />
+                 <Button title="Scan Book Id" color='maroon' onPress={() => scanBookId()} />
                 <Formik
-                    initialValues={{ id: '', name: '', author: '' }}
+                    initialValues={{ name: '', author: '' }}
                     onSubmit={(values, actions) => {
                         actions.resetForm();
                         addBook(values)
@@ -47,13 +62,6 @@ export default function AddBooksModal(props) {
                 >
                     {(formikProps) => (
                         <View>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Book Id"
-                                keyboardType='numeric'
-                                onChangeText={formikProps.handleChange('id')}
-                                value={formikProps.values.id}
-                            />
                             <TextInput
                                 style={styles.input}
                                 placeholder="Book Name"

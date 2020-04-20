@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { PRIMARY_COLOR, SECONDARY_COLOR } from '../styles/globalStyles' 
 
 
 export const CustomButton = (props) => {
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
 
-        backgroundColor: '#2AC062',
+        backgroundColor: SECONDARY_COLOR,
         shadowColor: '#2AC062',
         shadowOpacity: 0.4,
         shadowOffset: { height: 10, width: 0 },
@@ -33,7 +34,9 @@ const styles = StyleSheet.create({
 
     text: {
         fontSize: 16,
+
+        fontFamily: 'lacquer-regular',
         textTransform: 'uppercase',
-        color: '#FFFFFF',
+        color: '#000000',
     },
 });

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, ToastAndroid, ActivityIndicator } from 'react-native';
 import { CustomButton } from '../Components/CustomButton';
 
-
 export default function Issue({ navigation }) {
     [bookId, setBookId] = useState("");
     [employeeId, setEmployeeId] = useState("");
@@ -32,8 +31,6 @@ export default function Issue({ navigation }) {
             }),
         })
         .then(response => {
-            console.log("****************************")
-            console.log(JSON.stringify(response))
             return response.json()
         })
         .then(responseJson => {
@@ -67,6 +64,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     text: {
+        fontFamily: 'lacquer-regular',
         fontSize: 25,
     }
 })
